@@ -1,14 +1,27 @@
 import React from 'react';
 import './App.css';
-import Post from './components/Post';
+import PostPage from './pages/post';
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch
+} from 'react-router-dom';
 
 
 function App() {
-    
-    return(
-        <div className="App">
-            <Post />
-        </div>
+    return (
+        <Router>
+            <div className="container">
+                <Switch>
+                    <Route path="/" exact>
+                        Home Page
+                    </Route>
+                    <Route path="/posts">
+                        <PostPage />
+                    </Route>
+                </Switch>
+            </div>
+        </Router>
     );
 }
 
