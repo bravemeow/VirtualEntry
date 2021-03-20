@@ -1,19 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React from 'react';
+import './App.css';
+import Post from './components/Post';
 
 
-const App = props => {
-    const [state, setState] = useState('')
-    useEffect( () => {
-        axios.get('/api/hello')
-            .then(res => setState(res.data))
-            .catch(err => console.error(err))
-    }, [])
+function App() {
+    
     return(
-        <div>
-            <h2>{ state.response_text }</h2>
+        <div className="App">
+            <Post />
         </div>
-    )
-};
+    );
+}
 
 export default App;
