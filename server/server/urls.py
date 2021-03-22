@@ -1,4 +1,5 @@
 from django.contrib import admin
+from allauth.account.views import confirm_email
 from django.urls import path, include, re_path
 from api.views import posts
 
