@@ -5,3 +5,8 @@
 .sign-form {
     max-width: 300px;
 }
+.sign-form .sign-err{
+    font-size: small;
+    font-weight: 600;
+    color: red;
+}

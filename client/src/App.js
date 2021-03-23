@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import PostPage from './pages/post';
 import RegisterPage from './pages/account';
 import {
     BrowserRouter as Router,
@@ -16,9 +15,6 @@ function App() {
                 <Switch>
                     <Route path="/" exact>
                         Home Page
-                    </Route>
-                    <Route path="/posts">
-                        <PostPage />
                     </Route>
                     <Route path="/register">
                         <RegisterPage />
