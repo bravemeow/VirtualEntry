@@ -1,7 +1,12 @@
-#root {
-    margin-top: 3rem;
+.myNav {
+    min-height: 3rem;
 }
-
+.navDrop {
+    margin: 5px !important;
+}
+.myMain {
+    margin-top: 2rem;
+}
 .sign-form {
     max-width: 300px;
 }

@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
-import RegisterPage from './pages/account';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import SignPage from './pages/account';
+import NavBar from './components/NavBar';
 import {
     BrowserRouter as Router,
     Route,
@@ -11,13 +13,14 @@ import {
 function App() {
     return (
         <Router>
-            <div className="container">
+            <NavBar />
+            <div className="myMain container">
                 <Switch>
-                    <Route path="/" exact>
+                    <Route path="/" exact id="home">
                         Home Page
                     </Route>
                     <Route path="/register">
-                        <RegisterPage />
+                        <SignPage />
                     </Route>
                 </Switch>
             </div>
