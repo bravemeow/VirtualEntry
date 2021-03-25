@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SignPage from './pages/account';
+import HomePage from './pages/home';
 import NavBar from './components/NavBar';
 import {
     BrowserRouter as Router,
@@ -17,7 +18,7 @@ function App() {
             <div className="myMain container">
                 <Switch>
                     <Route path="/" exact id="home">
-                        Home Page
+                        <HomePage />
                     </Route>
                     <Route path="/register">
                         <SignPage />
