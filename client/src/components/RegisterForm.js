@@ -21,27 +21,27 @@ function RegisterForm() {
                 }
                 else
                 setError("회원가입을 축하드립니다.")
-            })
-    }
+            });
+    };
     
     // Check Validation
     function validateForm() {
         let validated = false;
         if (!email) {
             setEmailError('이메일을 입력해주세요.')
-        }
+        };
         if (!password) {
             setPasswordError('비밀번호를 입력해주세요.')
-        }
+        };
         if (!password2) {
             setPassword2Error('비밀번호를 입력해주세요.')
-        }
+        };
         if (password !== password2 && password2 != '') {
             setPassword2Error('비밀번호가 일치하지 않습니다.')
-        }
+        };
         if (email && password === password2) {
             validated = true;
-        }
+        };
         return validated
     }
 
@@ -50,7 +50,7 @@ function RegisterForm() {
         setEmailError('');
         setPasswordError('');
         setPassword2Error('');
-    }
+    };
 
     // Submit Button
     function onSubmit(event) {
@@ -58,7 +58,7 @@ function RegisterForm() {
         resetError();
         if (validateForm()) {
             checkAddUser(email, password, password2);
-        }
+        };
     };
 
     return (
@@ -87,7 +87,7 @@ function RegisterForm() {
             
         </form>
         </>
-    )
+    );
 };
 
 export default RegisterForm;

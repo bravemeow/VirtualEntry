@@ -3,10 +3,10 @@ import RegisterForm from '../components/RegisterForm';
 
 
 
-function RegisterPage() {
+function SignPage() {
     return (
         <RegisterForm />
     )
 }
 
-export default RegisterPage;
+export default SignPage;

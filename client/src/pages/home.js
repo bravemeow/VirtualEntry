@@ -1,31 +1,66 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
+import {Table} from 'react-bootstrap';
 
 
 function HomePage() {
-    const [dataFromUpbit, setDataFromUpbit] = useState('');
-    const dataToUpbit = '[{"ticket":"test"},{"type":"ticker","codes":["KRW-BTC"]}]'
-    const url = 'wss://api.upbit.com/websocket/v1';
-    const ws = new WebSocket(url);
-    const reader = new FileReader();
+    let coins = [];
     useEffect(() => {
-        ws.addEventListener('open', () => {
-            ws.send(dataToUpbit);
-            console.log("연결완료")
-        });
-        ws.addEventListener('message', (msg) => {
-            reader.readAsText(msg.data);
-            reader.onload = () => {
-               setDataFromUpbit(JSON.parse(reader.result)); 
-            };
-            console.log("메세지도착");
-        });
-    },[]); 
-    
+        const dataToUpbit = '[{"ticket":"UNIQUE_TICKET"},{"type":"ticker","codes":["KRW-BTC","KRW-ETH"]}]'
+        const url = 'wss://api.upbit.com/websocket/v1';
+        const ws = new WebSocket(url);
+        const reader = new FileReader();
+        function onOpenWs() {
+            ws.onopen = () => {
+                console.log("Connected!");
+                ws.send(dataToUpbit);
+                ws.onmessage = (evt) => {
+                    reader.onload = () => {
+                        var resData = JSON.parse(reader.result)
+                        var tmpData = {}
+                        tmpData['code'] = resData['code']
+                        tmpData['price'] = resData['trade_price']
+                        let result = coins.filter(coin => {
+                            return coin.code == tmpData.code
+                        })
+                        if (result==''){
+                            coins.push(tmpData)
+                            
+                        }
+                        coins.map((coin)=> {
+                            if (coin['code'] == tmpData['code']){
+                                coin['price'] = tmpData['price']
+                            }
+                        })
+                        // console.log(coins)
+                        
+                    }
+                    try {
+                        reader.readAsText(evt.data);
+                    }
+                    catch {
+                        
+                    }
+                }
+            }
+        }
+        onOpenWs();
+    }, []);
     return (
+
         <div className="home">
-            {dataFromUpbit.trade_price}
+            <Table striped bordered hover variant="dark">
+                <thead>
+                    <tr>
+                        <th>코인명</th>
+                        <th>현재가</th>
+                        <th>수익률</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </Table>
         </div>
     )
-}
+};
 
 export default HomePage;
