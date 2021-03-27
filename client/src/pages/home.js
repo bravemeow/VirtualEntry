@@ -3,48 +3,40 @@ import {Table} from 'react-bootstrap';
 
 
 function HomePage() {
-    let coins = [];
+    const [coins, setCoins] = useState([{"code":"KRW-BTC"}]);
+    const [resData, setResData] = useState();
+    const dataToUpbit = '[{"ticket":"UNIQUE_TICKET"},{"type":"ticker","codes":["KRW-BTC","KRW-ETH"]}]'
+    const url = 'wss://api.upbit.com/websocket/v1';
+    const ws = new WebSocket(url);
+    const reader = new FileReader();
     useEffect(() => {
-        const dataToUpbit = '[{"ticket":"UNIQUE_TICKET"},{"type":"ticker","codes":["KRW-BTC","KRW-ETH"]}]'
-        const url = 'wss://api.upbit.com/websocket/v1';
-        const ws = new WebSocket(url);
-        const reader = new FileReader();
-        function onOpenWs() {
-            ws.onopen = () => {
-                console.log("Connected!");
-                ws.send(dataToUpbit);
-                ws.onmessage = (evt) => {
-                    reader.onload = () => {
-                        var resData = JSON.parse(reader.result)
-                        var tmpData = {}
-                        tmpData['code'] = resData['code']
-                        tmpData['price'] = resData['trade_price']
-                        let result = coins.filter(coin => {
-                            return coin.code == tmpData.code
-                        })
-                        if (result==''){
-                            coins.push(tmpData)
-                            
-                        }
-                        coins.map((coin)=> {
-                            if (coin['code'] == tmpData['code']){
-                                coin['price'] = tmpData['price']
-                            }
-                        })
-                        // console.log(coins)
-                        
-                    }
-                    try {
-                        reader.readAsText(evt.data);
-                    }
-                    catch {
-                        
-                    }
+        ws.onopen = () => {
+            console.log("Connected!");
+            ws.send(dataToUpbit);
+        }
+    }, []);
+    useEffect(() => {
+        ws.onmessage = (evt) => {
+            reader.onload = () => {
+                var result = JSON.parse(reader.result)
+                var result = coins.findIndex(x => x.code == result.code)
+                if (result == -1){
+                    setCoins(prev => [...prev, {
+                        "code": result.code,
+                        "price": result.trade_price
+                    }])
+                    console.log(coins)
                 }
+                
+            }
+            try {
+                reader.readAsText(evt.data);
+            }
+            catch {
+                
             }
         }
-        onOpenWs();
-    }, []);
+    })
     return (
 
         <div className="home">
@@ -57,6 +49,9 @@ function HomePage() {
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>{coins.map(coin=> coin.code)}</td>
+                    </tr>
                 </tbody>
             </Table>
         </div>
