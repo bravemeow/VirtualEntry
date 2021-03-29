@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {Table} from 'react-bootstrap';
 
 
 function HomePage() {
-    const [coins, setCoins] = useState([{"code":"KRW-BTC"}]);
-    const [resData, setResData] = useState();
+    
     const dataToUpbit = '[{"ticket":"UNIQUE_TICKET"},{"type":"ticker","codes":["KRW-BTC","KRW-ETH"]}]'
     const url = 'wss://api.upbit.com/websocket/v1';
     const ws = new WebSocket(url);
@@ -15,28 +14,27 @@ function HomePage() {
             ws.send(dataToUpbit);
         }
     }, []);
+
+
+    const [coins, setCoins] = useState([]);
+    const latestCoins = useRef(coins);
     useEffect(() => {
+        latestCoins.current = coins
         ws.onmessage = (evt) => {
             reader.onload = () => {
-                var result = JSON.parse(reader.result)
-                var result = coins.findIndex(x => x.code == result.code)
-                if (result == -1){
-                    setCoins(prev => [...prev, {
-                        "code": result.code,
-                        "price": result.trade_price
-                    }])
-                    console.log(coins)
+                var datas = JSON.parse(reader.result)
+                var result = latestCoins.current.find(x => x.code == datas.code)
+                if (!result){
+                    setCoins(prev=>[...prev, datas])
                 }
-                
             }
             try {
                 reader.readAsText(evt.data);
             }
             catch {
-                
             }
         }
-    })
+    },[coins])
     return (
 
         <div className="home">
@@ -49,9 +47,14 @@ function HomePage() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{coins.map(coin=> coin.code)}</td>
-                    </tr>
+                    {coins.map((coin, key) => {
+                        return(
+                            <tr key={key}>
+                                <td>{coin.code}</td>
+                                <td>{coin.trade_price}</td>
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </Table>
         </div>
@@ -59,3 +62,4 @@ function HomePage() {
 };
 
 export default HomePage;
+
